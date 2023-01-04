@@ -22,6 +22,7 @@ void Menu::Render(GLFWwindow* Window, const int Width, const int Height)
 	{
 		glfwSetWindowShouldClose(Window, true);
 	}
+
 }
 
 void Menu::RenderOption(Player &player, GLFWwindow* Window, const int Width, const int Height)

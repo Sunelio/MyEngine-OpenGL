@@ -21,9 +21,9 @@ namespace LowRenderer
 	public:
 		Mat4 ModelMatrix;
 		Mat4 MVPmat;
+		int* mShaderProgram;
 
 	private:
-		int* mShaderProgram;
 		Resources::Texture* mTexture;
 		Resources::Model* mModel;
 

@@ -11,6 +11,7 @@ enum GameState
 {
 	GS_PLAY,
 	GS_MULTITHREAD,
+	GS_SELECTSHADING,
 	GS_OPTION,
 	GS_MAIN_MENU
 };
@@ -24,6 +25,12 @@ enum SelectButton
 	B_JUMP
 };
 
+enum ShaderType
+{
+	SH_BASIC,
+	SH_CELSHADING,
+};
+
 class Menu
 {
 public:
@@ -31,7 +38,9 @@ public:
 	void RenderOption(Player& player, GLFWwindow* Window, const int Width, const int Height);
 	int lastButtonPush(GLFWwindow* Window);
 	int checkKey(int key, Player& player, int lastKey);
+	bool shaderCheckBox;
 	GameState gameState = GS_MAIN_MENU;
+	ShaderType shaderType = SH_BASIC;
 	SelectButton selectButton = B_FORWARD;
 private:
 	char* textForward;

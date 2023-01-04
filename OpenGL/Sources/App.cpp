@@ -135,9 +135,12 @@ namespace Core
 		mRscManager = Resources::ResourceManager::GetInstance();
 
 		start = std::chrono::steady_clock::now();
+		
 
-		//mRscManager->Create<Resources::Shader>("shader", "Resources/Shaders/shader.vert:Resources/Shaders/shader.frag");
-		mRscManager->Create<Resources::Shader>("shader", "Resources/Shaders/shader.vert:Resources/Shaders/cel-shading.frag");
+		mRscManager->Create<Resources::Shader>("shader", "Resources/Shaders/shader.vert:Resources/Shaders/shader.frag");
+
+		mRscManager->Create<Resources::Shader>("shaderCel", "Resources/Shaders/shader.vert:Resources/Shaders/cel-shading.frag");
+
 		mShaderProgram = mRscManager->Get<Resources::Shader>("shader")->GetShaderProgram();
 
 		Resources::Shader* colliderShader = Resources::ResourceManager::GetInstance()->Create<Resources::Shader>("shaderCollider", "Resources/Shaders/collider.vert:Resources/Shaders/collider.frag");
@@ -236,8 +239,10 @@ namespace Core
 
 		start = std::chrono::steady_clock::now();
 
-		//mThreadManager.RsrcToLoadQueue.push(mRscManager->Create<Resources::Shader>("shader", "Resources/Shaders/shader.vert:Resources/Shaders/shader.frag"));
-		mThreadManager.RsrcToLoadQueue.push(mRscManager->Create<Resources::Shader>("shader", "Resources/Shaders/shader.vert:Resources/Shaders/cel-shading.frag"));
+		mThreadManager.RsrcToLoadQueue.push(mRscManager->Create<Resources::Shader>("shader", "Resources/Shaders/shader.vert:Resources/Shaders/shader.frag"));
+
+		mThreadManager.RsrcToLoadQueue.push(mRscManager->Create<Resources::Shader>("shaderCel", "Resources/Shaders/shader.vert:Resources/Shaders/cel-shading.frag"));
+
 		mShaderProgram = mRscManager->Get<Resources::Shader>("shader")->GetShaderProgram();
 
 		Resources::Shader* colliderShader = Resources::ResourceManager::GetInstance()->Create<Resources::Shader>("shaderCollider", "Resources/Shaders/collider.vert:Resources/Shaders/collider.frag");
@@ -430,7 +435,13 @@ namespace Core
 					}
 
 				}
+
+				if (ImGui::CollapsingHeader("Shader", ImGuiTreeNodeFlags_DefaultOpen))
+					ImGui::Checkbox("Cel-Shading", &mMenu.shaderCheckBox);
 			}
+
+
+
 			ImGui::End();
 
 			// input
@@ -497,6 +508,35 @@ namespace Core
 
 					if (!mSlide && (!mGravity || mPlayer.Object->Collider->IsColliding()) && mPlayer.CanJump)
 						mPlayer.Object->Velocity.y = 0.f;
+
+					if (mMenu.shaderCheckBox)
+					{
+						if (!celInit && isInitBasic)
+						{
+							mMenu.shaderType = SH_CELSHADING;
+							mShaderProgram = mRscManager->Get<Resources::Shader>("shaderCel")->GetShaderProgram();
+							for (int i = 0; i < mGraph.Objects.size(); i++)
+							{
+								mGraph.Objects[i]->Mesh.mShaderProgram = mShaderProgram;
+							}
+							celInit = true;
+							isInitBasic = false;
+						}
+					}
+					else
+					{
+						if (celInit && !isInitBasic)
+						{
+							mMenu.shaderType = SH_BASIC;
+							mShaderProgram = mRscManager->Get<Resources::Shader>("shader")->GetShaderProgram();
+							for (int i = 0; i < mGraph.Objects.size(); i++)
+							{
+								mGraph.Objects[i]->Mesh.mShaderProgram = mShaderProgram;
+							}
+							celInit = false;
+							isInitBasic = true;
+						}
+					}
 			}
 		}
 		else

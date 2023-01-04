@@ -62,6 +62,8 @@ namespace Core
 		bool mFirstMouse = true;
 		bool mGravity = true;
 		bool mSlide = true;
+		bool celInit = false;
+		bool isInitBasic = true;
 		std::vector<LowRenderer::DirectionalLight> mDirectionalLights;
 		std::vector<LowRenderer::PointLight> mPointLights;
 		std::vector<LowRenderer::SpotLight> mSpotLights;
